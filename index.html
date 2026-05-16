@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio Data | Ayushi Yadav</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-cream: #fdfbf7;
+            --bg-beige: #f5efe6;
+            --royal-maroon: #4a121a;
+            --royal-maroon-light: #6b202c;
+            --gold-dark: #aa7c11;
+            --gold-mid: #d4af37;
+            --gold-light: #f3e5ab;
+            --text-dark: #2c2523;
+            --text-light: #fdfbf7;
+            --glass-bg: rgba(255, 255, 255, 0.78);
+            --glass-border: rgba(214, 175, 55, 0.35);
+            --shadow-premium: 0 30px 60px rgba(74, 18, 26, 0.08);
+            --font-display: 'Cinzel', serif;
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Poppins', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 10% 20%, rgba(245, 239, 230, 0.6) 0%, transparent 50%),
+                              radial-gradient(circle at 90% 80%, rgba(74, 18, 26, 0.04) 0%, transparent 50%);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-cream); }
+        ::-webkit-scrollbar-thumb { background: var(--royal-maroon); border-radius: 4px; }
+
+        /* Preloader */
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: var(--royal-maroon);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-out, visibility 1s;
+        }
+        .loader-mandala {
+            width: 80px; height: 80px;
+            border: 2px dashed var(--gold-mid);
+            border-radius: 50%;
+            animation: spin 12s linear infinite;
+            position: relative;
+        }
+        .loader-mandala::after {
+            content: '';
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 1px dashed var(--gold-light);
+            border-radius: 50%;
+            animation: spin-reverse 6s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin-reverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+        .loader-text {
+            margin-top: 24px;
+            font-family: var(--font-display);
+            color: var(--gold-light);
+            letter-spacing: 4px;
+            font-size: 0.9rem;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* Particle Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 20px 14px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .royal-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 12px auto;
+            gap: 15px;
+            opacity: 0.8;
+        }
+        .royal-divider::before, .royal-divider::after {
+            content: '';
+            height: 1px;
+            width: 50px;
+            background: linear-gradient(to var(--direction, right), transparent, var(--gold-dark));
+        }
+        .royal-divider::after { --direction: left; }
+        .royal-divider svg { width: 20px; height: 20px; fill: var(--gold-dark); }
+
+        /* ============================
+           HERO SECTION — portrait-optimised
+        ============================ */
+        .hero-section {
+            width: 100vw;
+            height: 100svh;          /* safe-area aware on mobile */
+            max-width: none;
+            padding: 0; margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;  /* content sits at bottom on portrait */
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Two hero images: mobile shows portrait, desktop shows landscape */
+        .hero-bg-image {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            transform: scale(1.05);
+            animation: subtleZoom 20s infinite alternate ease-in-out;
+        }
+
+        /* Mobile image: portrait, anchor top so face is visible */
+        .hero-bg-mobile {
+            object-position: center top;
+            display: block;
+        }
+        /* Desktop image: landscape/square, centred */
+        .hero-bg-desktop {
+            object-position: center center;
+            display: none;
+        }
+
+        /* On screens wider than 768px → show desktop img, hide mobile img */
+        @media (min-width: 768px) {
+            .hero-bg-mobile  { display: none; }
+            .hero-bg-desktop { display: block; }
+        }
+
+        @keyframes subtleZoom {
+            0%   { transform: scale(1); }
+            100% { transform: scale(1.08); }
+        }
+
+        .hero-scrim {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            /* Stronger gradient at bottom so text is always readable */
+            background: linear-gradient(
+                to bottom,
+                rgba(42, 10, 15, 0.15) 0%,
+                rgba(20, 5, 7, 0.35) 45%,
+                rgba(10, 2, 3, 0.92) 100%
+            );
+            z-index: -1;
+        }
+
+        .hero-content-box {
+            max-width: 650px;
+            padding: 0 24px 60px;
+            width: 100%;
+        }
+
+        .hero-greeting {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            color: var(--gold-light);
+            font-style: italic;
+            margin-bottom: 8px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.2s ease-out;
+        }
+
+        /* ── SLIDE-IN for hero-name ── */
+        .hero-name {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            /* start: off-screen left, blurred */
+            opacity: 0;
+            transform: translateX(-80px) scale(0.95);
+            filter: blur(6px);
+            transition: opacity 1.4s cubic-bezier(0.19, 1, 0.22, 1) 0.4s,
+                        transform 1.4s cubic-bezier(0.19, 1, 0.22, 1) 0.4s,
+                        filter 1.2s ease 0.4s;
+        }
+
+        /* hero-subtitle hidden (replaced by marquee below) */
+        .hero-subtitle { display: none; }
+
+        .loaded .hero-greeting {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .loaded .hero-name {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            filter: blur(0);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.6;
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-light);
+        }
+        .scroll-indicator span {
+            width: 1px;
+            height: 36px;
+            background: linear-gradient(to bottom, var(--gold-mid), transparent);
+            animation: lineScroll 2.2s infinite ease-in-out;
+        }
+        @keyframes lineScroll {
+            0%   { transform: scaleY(0) translateY(0); opacity: 0; }
+            50%  { transform: scaleY(1) translateY(0); opacity: 1; }
+            100% { transform: scaleY(0) translateY(40px); opacity: 0; }
+        }
+
+        /* ============================
+           MARQUEE / TICKER — between hero & shlok
+        ============================ */
+        .marquee-section {
+            width: 100%;
+            background: linear-gradient(135deg, var(--royal-maroon) 0%, var(--royal-maroon-light) 100%);
+            padding: 14px 0;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid rgba(214,175,55,0.25);
+            border-bottom: 1px solid rgba(214,175,55,0.25);
+        }
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marqueeScroll 28s linear infinite;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        @keyframes marqueeScroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .marquee-item {
+            white-space: nowrap;
+            padding: 0 40px;
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--gold-light);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .marquee-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--gold-mid);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        /* Fade edges */
+        .marquee-section::before,
+        .marquee-section::after {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 60px;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .marquee-section::before {
+            left: 0;
+            background: linear-gradient(to right, var(--royal-maroon), transparent);
+        }
+        .marquee-section::after {
+            right: 0;
+            background: linear-gradient(to left, var(--royal-maroon), transparent);
+        }
+
+        /* ============================
+           SHLOK
+        ============================ */
+        .shlok-section {
+            background: linear-gradient(145deg, var(--royal-maroon) 0%, var(--royal-maroon-light) 100%);
+            color: var(--text-light);
+            text-align: center;
+            padding: 28px 20px;
+            border-radius: 24px;
+            margin: 6px;
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.35), 0 25px 55px rgba(74, 18, 26, 0.15);
+        }
+        .shlok-text {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            line-height: 2.1rem;
+            color: var(--gold-light);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============================
+           MASTER BIO CARD
+        ============================ */
+        .master-bio-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 22px 16px;
+            margin: 6px;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .section-main-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--royal-maroon);
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .details-list {
+            margin-top: 8px;
+            margin-bottom: 22px;
+        }
+        .details-list:last-child { margin-bottom: 0; }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            align-items: center;
+            padding: 8px 6px;
+            border-bottom: 1px solid rgba(214, 175, 55, 0.15);
+            transition: background-color 0.3s ease;
+        }
+        .info-row:hover { background-color: rgba(214, 175, 55, 0.04); }
+        .info-row:last-child { border-bottom: none; }
+        .info-key {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #6b6259;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-key svg { width: 16px; height: 16px; fill: var(--gold-dark); flex-shrink: 0; }
+        .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            padding-left: 10px;
+            line-height: 1.4;
+        }
+
+        /* ============================
+           GALLERY
+        ============================ */
+        .gallery-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--royal-maroon);
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+        }
+        .modern-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-gap: 10px;
+            margin: 10px 6px 0;
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(74, 18, 26, 0.05);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .gallery-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+        .gi-1 { grid-column: span 3; grid-row: span 2; aspect-ratio: 4/5; }
+        .gi-2 { grid-column: span 3; grid-row: span 1; aspect-ratio: 1/1; }
+        .gi-3 { grid-column: span 3; grid-row: span 1; aspect-ratio: 1/1; }
+        .gi-4 { grid-column: span 6; grid-row: span 1; aspect-ratio: 16/9; }
+        .gallery-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-premium); border-color: var(--gold-mid); }
+        .gallery-item:hover img { transform: scale(1.03); }
+
+        /* ============================
+           FAMILY CARDS
+        ============================ */
+        .family-cards-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 6px;
+        }
+
+        .rep-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 20px 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: var(--shadow-premium);
+        }
+        .rep-avatar-frame {
+            position: relative;
+            width: 80px; height: 80px;
+            margin-bottom: 12px;
+        }
+        .rep-avatar {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid transparent;
+            background: linear-gradient(var(--bg-cream), var(--bg-cream)) padding-box,
+                        linear-gradient(135deg, var(--gold-light), var(--gold-dark)) border-box;
+            box-shadow: 0 10px 25px rgba(74, 18, 26, 0.1);
+        }
+        .rep-intro {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            color: var(--royal-maroon);
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .rep-relation {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-dark);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .rep-note {
+            font-size: 0.88rem;
+            color: #555;
+            line-height: 1.45;
+            max-width: 320px;
+            margin-bottom: 14px;
+        }
+        .rep-note span.tech-pitch {
+            display: block;
+            margin-top: 6px;
+            font-weight: 500;
+            color: var(--royal-maroon-light);
+            font-style: italic;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 280px;
+        }
+        .action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 14px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #1ebd57 100%);
+            color: white;
+            box-shadow: 0 6px 15px rgba(37, 211, 102, 0.2);
+        }
+        .btn-call {
+            background: linear-gradient(135deg, var(--royal-maroon) 0%, var(--royal-maroon-light) 100%);
+            color: white;
+            box-shadow: 0 6px 15px rgba(74, 18, 26, 0.15);
+            border: 1px solid rgba(214,175,55,0.15);
+        }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .action-btn svg { width: 15px; height: 15px; fill: currentColor; }
+        .ripple {
+            position: absolute;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
+
+        /* ============================
+           SCROLL REVEAL
+        ============================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            filter: blur(4px);
+            transition: opacity 1s cubic-bezier(0.215, 0.610, 0.355, 1),
+                        transform 1s cubic-bezier(0.215, 0.610, 0.355, 1),
+                        filter 1s ease;
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); filter: blur(0); }
+
+        /* ============================
+           RESPONSIVE
+        ============================ */
+        @media (max-width: 480px) {
+            .info-row { grid-template-columns: 1fr; gap: 4px; padding: 11px 6px; }
+            .info-value { padding-left: 26px; }
+            .hero-name { font-size: 1.9rem; }
+            .modern-gallery-grid { grid-gap: 8px; margin: 14px 8px 0; }
+            .shlok-section { padding: 38px 18px; margin: 10px; }
+            .master-bio-card { padding: 28px 16px; margin: 10px; }
+            .family-cards-wrapper { margin: 10px; gap: 14px; }
+            .modern-gallery-grid { margin: 14px 10px 0; }
+        }
+
+        @media (min-width: 768px) {
+            section { padding: 28px 30px; }
+            .master-bio-card, .shlok-section { margin: 0 auto; }
+            .modern-gallery-grid { margin: 14px auto 0; max-width: 840px; }
+            .family-cards-wrapper {
+                grid-template-columns: 1fr 1fr;
+                margin: 0 auto;
+                max-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="loader-mandala"></div>
+        <div class="loader-text">SHUBH VIVAH</div>
+    </div>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- ── HERO ── -->
+    <section class="hero-section">
+        <!--
+            TWO HERO IMAGES:
+            • hero-bg-mobile  → your portrait/phone image  (e.g. ayushi_phone.jpg, 1200×1600)
+            • hero-bg-desktop → your landscape/PC image    (e.g. ayushi_pc.jpg,    1920×1080 or square)
+            CSS hides the wrong one automatically at 768px breakpoint.
+        -->
+        <img class="hero-bg-image hero-bg-mobile"
+             src="imgforPhone.jpg"
+             alt="Ayushi Yadav"
+             width="1200" height="1600">
+        <img class="hero-bg-image hero-bg-desktop"
+             src="imageforPC.png"
+             alt="Ayushi Yadav"
+             width="1920" height="1080">
+        <div class="hero-scrim"></div>
+        <div class="hero-content-box">
+            <p class="hero-greeting">Namaste,</p>
+            <h1 class="hero-name">Hi, I am Ayushi Yadav</h1>
+            <div class="royal-divider">
+                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4M12,18A2,2 0 0,1 10,16A2,2 0 0,1 12,14A2,2 0 0,1 14,16A2,2 0 0,1 12,18Z"/></svg>
+            </div>
+        </div>
+        <div class="scroll-indicator"><span></span>SCROLL DOWN</div>
+    </section>
+
+    <!-- ── MARQUEE (hero-subtitle looping ticker) ── -->
+    <div class="marquee-section">
+        <div class="marquee-track" id="marqueeTrack">
+            <!-- JS duplicates these for seamless loop -->
+            <div class="marquee-item">
+                <span class="marquee-dot"></span>
+                Welcome to my engagement portfolio
+                <span class="marquee-dot"></span>
+                I believe in blending timeless roots &amp; family alignment
+                <span class="marquee-dot"></span>
+                Pursuing MBA · Biotechnology Graduate
+                <span class="marquee-dot"></span>
+                A purposeful future awaits
+                <span class="marquee-dot"></span>
+                Kakadgaon, Dist. Khargone (MP)
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SHLOK ── -->
+    <section class="reveal">
+        <div class="shlok-section">
+            <p class="shlok-text">
+                यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।<br>
+                अभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम्॥<br><br>
+                परित्राणाय साधूनां विनाशाय च दुष्कृताम्।<br>
+                धर्मसंस्थापनार्थाय सम्भवामि युगे युगे॥
+            </p>
+        </div>
+    </section>
+
+    <!-- ── BIO CARD ── -->
+    <section class="reveal">
+        <div class="master-bio-card">
+            
+            <h2 class="section-main-title">Personal Details</h2>
+            <div class="royal-divider">
+                <svg viewBox="0 0 24 24"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/></svg>
+            </div>
+            <div class="details-list" id="personal-details-target"></div>
+
+            <h2 class="section-main-title" style="margin-top: 24px;">Family Details</h2>
+            <div class="royal-divider">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            </div>
+            <div class="details-list" id="family-details-target"></div>
+
+        </div>
+    </section>
+
+    <!-- ── GALLERY ── -->
+    <section class="reveal" style="max-width: 840px;">
+        <h2 class="gallery-title">Gallery</h2>
+        <div class="royal-divider">
+            <svg viewBox="0 0 24 24"><path d="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8L11,12M2,6V20A2,2 0 0,0 4,22H18V20H4V6H2Z"/></svg>
+        </div>
+        <div class="modern-gallery-grid">
+            <div class="gallery-item gi-1">
+                <img src="3.jpeg" alt="Ayushi Portrait Traditional">
+            </div>
+            <div class="gallery-item gi-2">
+                <img src="9.jpeg" alt="Ethnic Conceptual Visual">
+            </div>
+            <div class="gallery-item gi-3">
+                <img src="18.png" alt="Cultural Festive Aesthetics">
+            </div>
+            <div class="gallery-item gi-4">
+                <img src="13.jpeg" alt="Modern Minimal Outdoor Representation">
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FAMILY CONTACT CARDS ── -->
+    <section class="reveal" style="max-width: 840px;">
+        <h2 class="gallery-title">Connect With Our Family</h2>
+        <div class="royal-divider">
+            <svg viewBox="0 0 24 24"><path d="M12,2c1.1,0,2,0.9,2,2s-0.9,2-2,2s-2-0.9-2-2S10.9,2 12,2z M12,18c-1.1,0-2,0.9-2,2s0.9,2 2,2s2-0.9,2-2S13.1,18 12,18z M12,10c1.1,0,2,0.9,2,2s-0.9,2-2,2s-2-0.9-2-2S10.9,10 12,10z"/></svg>
+        </div>
+
+        <div class="family-cards-wrapper">
+            <div class="rep-card">
+                <div class="rep-avatar-frame">
+                    <img class="rep-avatar" src="images.png" alt="Mr. Sanjay Yadav Portrait">
+                </div>
+                <h3 class="rep-intro">Hi, I am Sanjay Yadav</h3>
+                <p class="rep-relation">Ayushi's Father</p>
+                <p class="rep-note">I proudly look after our agricultural land and family values. We are looking for a well-mannered, responsible, and cultured life partner for our daughter.</p>
+                <div class="btn-row">
+                    <a href="https://api.whatsapp.com/send?phone=919753077707&text=Namaste%20Sanjay%20Ji,%20we%20reviewed%20the%20profile%20of%20Ayushi%20Yadav%20and%20wished%20to%20discuss%20proposals." target="_blank" class="action-btn btn-whatsapp">
+                        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.817 9.817 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.17 8.17 0 0 1 2.41 5.83c0 4.52-3.68 8.21-8.21 8.21-1.44 0-2.85-.38-4.1-1.1l-.29-.17-3.05.8.81-2.97-.19-.31a8.172 8.172 0 0 1-1.25-4.26c.01-4.52 3.69-8.21 8.22-8.21m-1.95 4.52c-.17 0-.44.06-.67.31-.23.26-.88.86-.88 2.09s.9 2.42 1.02 2.58c.12.16 1.77 2.7 4.29 3.79.6.26 1.07.41 1.44.53.6.19 1.15.16 1.58.1.48-.07 1.48-.6 1.69-1.19.21-.59.21-1.09.15-1.19-.06-.1-.23-.16-.49-.29-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.59.13-.18.26-.69.85-.85 1.03-.15.17-.31.2-.57.07-.26-.13-1.11-.41-2.11-1.3-0.78-.7-1.31-1.56-1.46-1.82-.15-.26-.02-.4.11-.53.12-.11.26-.31.39-.46.13-.15.17-.26.26-.43.09-.17.05-.31-.02-.44-.07-.13-.59-1.43-.81-1.96-.22-.53-.44-.46-.59-.46h-.41z"/></svg>
+                        WhatsApp
+                    </a>
+                    <a href="tel:+919753077707" class="action-btn btn-call">
+                        <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+                        Call
+                    </a>
+                </div>
+            </div>
+
+            <div class="rep-card">
+                <div class="rep-avatar-frame">
+                    <img class="rep-avatar" src="images.png" alt="Mr. Sourabh Yadav Portrait">
+                </div>
+                <h3 class="rep-intro">Hi, I am Sourabh Yadav</h3>
+                <p class="rep-relation">Ayushi's Brother</p>
+                <p class="rep-note">It brings me great happiness to see my sister step towards a beautiful future. <span class="tech-pitch">I am currently starting my own tech company.</span> We are looking for a genuine, respectful, and caring person for her.</p>
+                <div class="btn-row">
+                    <a href="https://api.whatsapp.com/send?phone=917987689874&text=Namaste%20Sourabh,%20connected%20via%20Ayushi%27s%20matrimonial%20portfolio.%20Would%20love%20to%20interact." target="_blank" class="action-btn btn-whatsapp">
+                        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.817 9.817 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.17 8.17 0 0 1 2.41 5.83c0 4.52-3.68 8.21-8.21 8.21-1.44 0-2.85-.38-4.1-1.1l-.29-.17-3.05.8.81-2.97-.19-.31a8.172 8.172 0 0 1-1.25-4.26c.01-4.52 3.69-8.21 8.22-8.21m-1.95 4.52c-.17 0-.44.06-.67.31-.23.26-.88.86-.88 2.09s.9 2.42 1.02 2.58c.12.16 1.77 2.7 4.29 3.79.6.26 1.07.41 1.44.53.6.19 1.15.16 1.58.1.48-.07 1.48-.6 1.69-1.19.21-.59.21-1.09.15-1.19-.06-.1-.23-.16-.49-.29-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.59.13-.18.26-.69.85-.85 1.03-.15.17-.31.2-.57.07-.26-.13-1.11-.41-2.11-1.3-0.78-.7-1.31-1.56-1.46-1.82-.15-.26-.02-.4.11-.53.12-.11.26-.31.39-.46.13-.15.17-.26.26-.43.09-.17.05-.31-.02-.44-.07-.13-.59-1.43-.81-1.96-.22-.53-.44-.46-.59-.46h-.41z"/></svg>
+                        WhatsApp
+                    </a>
+                    <a href="tel:+917987689874" class="action-btn btn-call">
+                        <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+                        Call
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        /* ── DATA ── */
+        const personalData = [
+            { key: "Name",        val: "Ayushi Yadav",                ico: `<svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>` },
+            { key: "DOB",         val: "11 / 07 / 2004",             ico: `<svg viewBox="0 0 24 24"><path d="M19,4H18V2H16V4H8V2H6V4H5C3.89,4 3,4.89 3,6V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V6C21,4.89 20.1,4 19,4M19,19H5V9H19V19M12,11A2,2 0 0,0 10,13A2,2 0 0,0 12,15A2,2 0 0,0 14,13A2,2 0 0,0 12,11Z"/></svg>` },
+            { key: "Birth Place", val: "Kawadi (Borawan)",             ico: `<svg viewBox="0 0 24 24"><path d="M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>` },
+            { key: "Birth Time",  val: "5 : 28 PM",                  ico: `<svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg>` },
+            { key: "Height",      val: "4.9 Feet",                   ico: `<svg viewBox="0 0 24 24"><path d="M10.5,6A1.5,1.5 0 0,1 12,4.5A1.5,1.5 0 0,1 13.5,6A1.5,1.5 0 0,1 10.5,6M7,11H9V21H11V16H13V21H15V11H17V9H7V11Z"/></svg>` },
+            { key: "Gotra",       val: "Choudhry",                    ico: `<svg viewBox="0 0 24 24"><path d="M12 2c1.42 0 2.7.53 3.7 1.37l-1.42 1.42C13.53 4.31 12.8 4 12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8c.8 0 1.53-.31 2.28-.79l1.42 1.42C14.7 21.47 13.42 22 12 22 6.48 22 2 17.52 2 12S6.48 2 12 2zm8 6h-2v4h-4v2h4v4h2v-4h4v-2h-4V8z"/></svg>` },
+            { key: "Education",   val: "Biotechnology Completed",     ico: `<svg viewBox="0 0 24 24"><path d="M12,3L1,9L12,15L21,10.09V17H23V9L12,3M12,17L5.5,13.38V16.88L12,20.5L18.5,16.88V13.38L12,17Z"/></svg>` },
+            { key: "Currently",   val: "Pursuing MBA",                ico: `<svg viewBox="0 0 24 24"><path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg>` },
+            { key: "Address",     val: "Kakadgaon, Dist. Khargone (MP)", ico: `<svg viewBox="0 0 24 24"><path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4Z"/></svg>` }
+        ];
+
+        const familyData = [
+            { key: "Father Name",   val: "Mr. Sanjay Yadav",    ico: `<svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>` },
+            { key: "Occupation",    val: "Farmer",               ico: `<svg viewBox="0 0 24 24"><path d="M13,2.05C18.05,2.55 22,6.82 22,12C22,13.47 21.62,14.85 20.95,16.07L19.46,14.58C19.81,13.77 20,12.91 20,12C20,7.93 16.97,4.56 13,4.05V2.05M3.28,4L2,5.27L5.04,8.31C3.79,10.08 3,12.24 3,14.5C3,18.58 6.03,21.94 10,22.45V20.45C6.97,19.94 4.5,16.7 4.5,13C4.5,11.23 5.09,9.6 6.09,8.29L11,13.2V22H13V15.2L18.73,20.93L20,19.66L3.28,4M12,5.5A3.5,3.5 0 0,1 15.5,9C15.5,10.3 14.8,11.45 13.75,12.11L15.23,13.6C16.63,12.56 17.5,10.88 17.5,9A5.5,5.5 0 0,0 12,3.5C11,3.5 10.05,3.74 9.19,4.17L10.73,5.71C11.13,5.58 11.56,5.5 12,5.5M8.8,6.12L7.31,4.63C5.9,5.67 5,7.35 5,9.25C5,10.25 5.24,11.2 5.67,12.06L7.21,10.5C7.08,10.1 7,9.69 7,9.25C7,7.95 7.7,6.8 8.8,6.12Z"/></svg>` },
+            { key: "Mother Name",   val: "Mrs. Anita Yadav",    ico: `<svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>` },
+            { key: "Occupation",    val: "Homemaker",            ico: `<svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>` },
+            { key: "Siblings",      val: "1 Big Brother",        ico: `<svg viewBox="0 0 24 24"><path d="M16 13c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0-4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0 6c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z"/></svg>` },
+            { key: "Brother Name",  val: "Mr. Sourabh Yadav",   ico: `<svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"/></svg>` },
+            { key: "Grand Parents", val: "Late Mathuralal Yadav Ji &amp;<br>Mrs. Haru Bhai Yadav Ji", ico: `<svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"/></svg>` },
+            { key: "Maternal Gotra",val: "Solanki",              ico: `<svg viewBox="0 0 24 24"><path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 12,20Z"/></svg>` }
+        ];
+
+        function renderRows(targetId, sourceData) {
+            const container = document.getElementById(targetId);
+            sourceData.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'info-row';
+                row.innerHTML = `<div class="info-key">${item.ico} ${item.key}</div><div class="info-value">${item.val}</div>`;
+                container.appendChild(row);
+            });
+        }
+
+        /* ── MARQUEE: duplicate content for seamless loop ── */
+        function initMarquee() {
+            const track = document.getElementById('marqueeTrack');
+            if (!track) return;
+            const clone = track.querySelector('.marquee-item').cloneNode(true);
+            track.appendChild(clone);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderRows('personal-details-target', personalData);
+            renderRows('family-details-target', familyData);
+            initMarquee();
+
+            window.addEventListener("load", () => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.visibility = 'hidden';
+                    document.body.classList.add('loaded');
+                    initObserver();
+                }, 1000);
+            });
+
+            initCanvas();
+            initRipples();
+        });
+
+        function initObserver() {
+            const targets = document.querySelectorAll('.reveal');
+            const obs = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.05, rootMargin: "0px 0px -20px 0px" });
+            targets.forEach(el => obs.observe(el));
+        }
+
+        function initCanvas() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Part {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height + canvas.height;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedY = Math.random() * -0.5 - 0.2;
+                    this.speedX = Math.random() * 0.4 - 0.2;
+                    this.opacity = Math.random() * 0.5 + 0.2;
+                }
+                up() {
+                    this.y += this.speedY; this.x += this.speedX;
+                    if (this.y < -10) { this.y = canvas.height + 10; this.x = Math.random() * canvas.width; }
+                }
+                draw() {
+                    ctx.fillStyle = `rgba(214, 175, 55, ${this.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            const max = window.innerWidth < 768 ? 20 : 50;
+            for (let i = 0; i < max; i++) particles.push(new Part());
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.up(); p.draw(); });
+                requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        function initRipples() {
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const rip = document.createElement('span');
+                    rip.className = 'ripple';
+                    rip.style.left = `${e.clientX - rect.left}px`;
+                    rip.style.top  = `${e.clientY - rect.top}px`;
+                    this.appendChild(rip);
+                    setTimeout(() => rip.remove(), 600);
+                });
+            });
+        }
+
+        // Privacy guards
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (
+                e.key === 'PrintScreen' ||
+                (e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'u')) ||
+                e.keyCode === 123 ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C'))
+            ) {
+                e.preventDefault();
+                alert("Screenshots and printing are disabled on this profile for privacy.");
+                return false;
+            }
+        });
+        window.addEventListener('blur',  () => { document.body.style.filter = 'blur(20px)'; });
+        window.addEventListener('focus', () => { document.body.style.filter = 'none'; });
+    </script>
+</body>
+</html>
